@@ -3,7 +3,10 @@ package ru.hogwarts.school.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+import java.util.List;
 
 
 @Entity
@@ -14,6 +17,9 @@ public class Faculty {
     private Long id;
     private String name;
     private String color;
+
+    @OneToMany (mappedBy = "faculty")
+    private List<Student> students;
 
     public Faculty() {}
 
@@ -47,6 +53,14 @@ public class Faculty {
         this.color = color;
     }
 
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
     @Override
     public String toString() {
         return "Faculty{" +
@@ -68,4 +82,5 @@ public class Faculty {
     public int hashCode() {
         return java.util.Objects.hash(id, name, color);
     }
+
 }
