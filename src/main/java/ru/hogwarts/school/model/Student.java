@@ -5,13 +5,17 @@ import jakarta.persistence.*;
 
 
 @Entity
+@Table(name = "student")
 public class Student {
     @Id
-    @GeneratedValue
-
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private int age;
+
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Avatar avatar;
 
     @ManyToOne
     @JoinColumn(name = "faculty_id")
@@ -55,6 +59,19 @@ public class Student {
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        if (this.avatar != null) {
+            this.avatar.setStudent(null);
+        } if (avatar != null) {
+            avatar.setStudent(this);
+        }
+        this.avatar = avatar;
     }
 
     @Override
