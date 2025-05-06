@@ -64,4 +64,8 @@ public class StudentService {
                 .map(Student::getFaculty)
                 .orElse(null);
     }
+
+    public Student getStudentById(Long id) {
+        return studentRepository.findById(id).orElse(null);
+    }
 }

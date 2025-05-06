@@ -7,6 +7,7 @@ import jakarta.persistence.OneToMany;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -75,12 +76,14 @@ public class Faculty {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Faculty faculty = (Faculty) o;
-        return id.equals(faculty.id) && name.equals(faculty.name) && color.equals(faculty.color);
+        return Objects.equals(id, faculty.id) &&
+                Objects.equals(name, faculty.name) &&
+                Objects.equals(color, faculty.color);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, name, color);
+        return Objects.hash(id, name, color);
     }
 
 }
