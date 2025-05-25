@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -63,6 +65,10 @@ public class AvatarService {
     public Path getAvatarFromDisk(Long studentId) {
         Avatar avatar = getAvatarFromDb(studentId);
         return Paths.get(avatar.getFilePath());
+    }
+
+    public Page<Avatar> getAllAvatars(Pageable pageable) {
+        return avatarRepository.findAll(pageable);
     }
 
     @Transactional

@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,5 +66,14 @@ public class AvatarController {
     public ResponseEntity<String> deleteAvatar(@PathVariable Long studentId) {
         avatarService.deleteAvatar(studentId);
         return ResponseEntity.ok("Avatar deleted successfully");
+    }
+
+    @Operation(summary = "Get all avatars with pagination")
+    @GetMapping
+    public ResponseEntity<Page<Avatar>> getAllAvatars(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Avatar> avatars = avatarService.getAllAvatars(PageRequest.of(page, size));
+        return ResponseEntity.ok(avatars);
     }
 }
