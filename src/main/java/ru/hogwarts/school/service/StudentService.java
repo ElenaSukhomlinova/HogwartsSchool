@@ -68,4 +68,16 @@ public class StudentService {
     public Student getStudentById(Long id) {
         return studentRepository.findById(id).orElse(null);
     }
+
+    public int getTotalCountOfStudents() {
+        return studentRepository.countStudents();
+    }
+
+    public Double getAverageAgeOfStudents() {
+        return studentRepository.findAverageAge();
+    }
+
+    public Collection<Student> getLastFiveStudents() {
+        return studentRepository.findLastFiveStudents();
+    }
 }
