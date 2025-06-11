@@ -62,4 +62,10 @@ public class FacultyService {
                 .map(Faculty::getStudents)
                 .orElse(Collections.emptyList());
     }
+
+    public Optional<String> getLongestFacultyName() {
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length));
+    }
 }

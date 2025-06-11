@@ -99,4 +99,22 @@ public class StudentService {
         logger.info("Was invoked method for get last five students");
         return studentRepository.findLastFiveStudents();
     }
+
+    public Collection<String> getStudentsNamesStartingWithA() {
+        logger.info("Was invoked method to get students names starting with 'A'");
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name.startsWith("A"))
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public Double getAverageAgeUsingStreams() {
+        logger.info("Was invoked method to get average age using streams");
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0);
+    }
 }

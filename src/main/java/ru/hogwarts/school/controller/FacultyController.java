@@ -78,4 +78,20 @@ public class FacultyController {
                 ? ResponseEntity.ok(students)
                 : ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/longest-name")
+    public ResponseEntity<String> getLongestFacultyName() {
+        Optional<String> longestName = facultyService.getLongestFacultyName();
+        return longestName.isPresent()
+                ? ResponseEntity.ok(longestName.get())
+                : ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/fast-sum")
+    public ResponseEntity<Integer> calculateFastSum() {
+        int n = 1_000_000;
+        // Используем формулу суммы арифметической прогрессии: S = n*(a1+an)/2
+        int sum = n * (1 + n) / 2;
+        return ResponseEntity.ok(sum);
+    }
 }
