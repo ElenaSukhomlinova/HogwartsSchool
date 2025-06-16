@@ -113,4 +113,84 @@ public class StudentController {
         Double averageAge = studentService.getAverageAgeUsingStreams();
         return ResponseEntity.ok(averageAge);
     }
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<Void> printStudentsParallel() {
+        Collection<Student> students = studentService.getAllStudents();
+        if (students.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        Student[] studentArray = students.toArray(new Student[0]);
+        int count = Math.min(studentArray.length, 6);
+
+        if (count >= 1) {
+            System.out.println(studentArray[0].getName());
+        }
+        if (count >= 2) {
+            System.out.println(studentArray[1].getName());
+        }
+
+        if (count >= 3) {
+            new Thread(() -> {
+                System.out.println(studentArray[2].getName());
+                if (count >= 4) {
+                    System.out.println(studentArray[3].getName());
+                }
+            }).start();
+        }
+
+        if (count >= 5) {
+            new Thread(() -> {
+                System.out.println(studentArray[4].getName());
+                if (count >= 6) {
+                    System.out.println(studentArray[5].getName());
+                }
+            }).start();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<Void> printStudentsSynchronized() {
+        Collection<Student> students = studentService.getAllStudents();
+        if (students.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        Student[] studentArray = students.toArray(new Student[0]);
+        int count = Math.min(studentArray.length, 6); // Process up to 6 students
+
+        if (count >= 1) {
+            printNameSynchronized(studentArray[0].getName());
+        }
+        if (count >= 2) {
+            printNameSynchronized(studentArray[1].getName());
+        }
+
+        if (count >= 3) {
+            new Thread(() -> {
+                printNameSynchronized(studentArray[2].getName());
+                if (count >= 4) {
+                    printNameSynchronized(studentArray[3].getName());
+                }
+            }).start();
+        }
+
+        if (count >= 5) {
+            new Thread(() -> {
+                printNameSynchronized(studentArray[4].getName());
+                if (count >= 6) {
+                    printNameSynchronized(studentArray[5].getName());
+                }
+            }).start();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    private synchronized void printNameSynchronized(String name) {
+        System.out.println(name);
+    }
 }
