@@ -20,13 +20,13 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity <Student> createStudent (@RequestBody Student student) {
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student createdStudent = studentService.createStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Student> readStudent (@PathVariable Long id) {
+    public ResponseEntity<Student> readStudent(@PathVariable Long id) {
         Student student = studentService.readStudent(id);
         return student != null
                 ? ResponseEntity.ok(student)
@@ -41,7 +41,7 @@ public class StudentController {
                 : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping ("{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
         Student deletedStudent = studentService.deleteStudent(id);
         return deletedStudent != null
@@ -50,7 +50,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity <Collection<Student>> getAllStudents () {
+    public ResponseEntity<Collection<Student>> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
@@ -66,7 +66,7 @@ public class StudentController {
     public ResponseEntity<Collection<Student>> getStudentsByAgeBetween(
             @RequestParam int minAge,
             @RequestParam int maxAge) {
-        Collection <Student> students = studentService.getStudentsByAgeBetween(minAge,maxAge);
+        Collection<Student> students = studentService.getStudentsByAgeBetween(minAge, maxAge);
         return !students.isEmpty()
                 ? ResponseEntity.ok(students)
                 : ResponseEntity.noContent().build();
@@ -124,30 +124,7 @@ public class StudentController {
         Student[] studentArray = students.toArray(new Student[0]);
         int count = Math.min(studentArray.length, 6);
 
-        if (count >= 1) {
-            System.out.println(studentArray[0].getName());
-        }
-        if (count >= 2) {
-            System.out.println(studentArray[1].getName());
-        }
-
-        if (count >= 3) {
-            new Thread(() -> {
-                System.out.println(studentArray[2].getName());
-                if (count >= 4) {
-                    System.out.println(studentArray[3].getName());
-                }
-            }).start();
-        }
-
-        if (count >= 5) {
-            new Thread(() -> {
-                System.out.println(studentArray[4].getName());
-                if (count >= 6) {
-                    System.out.println(studentArray[5].getName());
-                }
-            }).start();
-        }
+        studentService.printStudentsParallel(studentArray, count);
 
         return ResponseEntity.ok().build();
     }
@@ -160,37 +137,10 @@ public class StudentController {
         }
 
         Student[] studentArray = students.toArray(new Student[0]);
-        int count = Math.min(studentArray.length, 6); // Process up to 6 students
+        int count = Math.min(studentArray.length, 6);
 
-        if (count >= 1) {
-            printNameSynchronized(studentArray[0].getName());
-        }
-        if (count >= 2) {
-            printNameSynchronized(studentArray[1].getName());
-        }
-
-        if (count >= 3) {
-            new Thread(() -> {
-                printNameSynchronized(studentArray[2].getName());
-                if (count >= 4) {
-                    printNameSynchronized(studentArray[3].getName());
-                }
-            }).start();
-        }
-
-        if (count >= 5) {
-            new Thread(() -> {
-                printNameSynchronized(studentArray[4].getName());
-                if (count >= 6) {
-                    printNameSynchronized(studentArray[5].getName());
-                }
-            }).start();
-        }
+        studentService.printStudentsSynchronized(studentArray, count);
 
         return ResponseEntity.ok().build();
-    }
-
-    private synchronized void printNameSynchronized(String name) {
-        System.out.println(name);
     }
 }
