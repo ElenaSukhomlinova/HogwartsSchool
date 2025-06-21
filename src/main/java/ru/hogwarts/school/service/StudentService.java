@@ -117,4 +117,62 @@ public class StudentService {
                 .average()
                 .orElse(0);
     }
+
+    public void printStudentsParallel(Student[] students, int count) {
+        if (count >= 1) {
+            System.out.println(students[0].getName());
+        }
+        if (count >= 2) {
+            System.out.println(students[1].getName());
+        }
+
+        if (count >= 3) {
+            new Thread(() -> {
+                System.out.println(students[2].getName());
+                if (count >= 4) {
+                    System.out.println(students[3].getName());
+                }
+            }).start();
+        }
+
+        if (count >= 5) {
+            new Thread(() -> {
+                System.out.println(students[4].getName());
+                if (count >= 6) {
+                    System.out.println(students[5].getName());
+                }
+            }).start();
+        }
+    }
+
+    public void printStudentsSynchronized(Student[] students, int count) {
+        if (count >= 1) {
+            printNameSynchronized(students[0].getName());
+        }
+        if (count >= 2) {
+            printNameSynchronized(students[1].getName());
+        }
+
+        if (count >= 3) {
+            new Thread(() -> {
+                printNameSynchronized(students[2].getName());
+                if (count >= 4) {
+                    printNameSynchronized(students[3].getName());
+                }
+            }).start();
+        }
+
+        if (count >= 5) {
+            new Thread(() -> {
+                printNameSynchronized(students[4].getName());
+                if (count >= 6) {
+                    printNameSynchronized(students[5].getName());
+                }
+            }).start();
+        }
+    }
+
+    private synchronized void printNameSynchronized(String name) {
+        System.out.println(name);
+    }
 }

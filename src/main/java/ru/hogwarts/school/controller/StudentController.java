@@ -20,13 +20,13 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity <Student> createStudent (@RequestBody Student student) {
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student createdStudent = studentService.createStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Student> readStudent (@PathVariable Long id) {
+    public ResponseEntity<Student> readStudent(@PathVariable Long id) {
         Student student = studentService.readStudent(id);
         return student != null
                 ? ResponseEntity.ok(student)
@@ -41,7 +41,7 @@ public class StudentController {
                 : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping ("{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
         Student deletedStudent = studentService.deleteStudent(id);
         return deletedStudent != null
@@ -50,7 +50,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity <Collection<Student>> getAllStudents () {
+    public ResponseEntity<Collection<Student>> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
@@ -66,7 +66,7 @@ public class StudentController {
     public ResponseEntity<Collection<Student>> getStudentsByAgeBetween(
             @RequestParam int minAge,
             @RequestParam int maxAge) {
-        Collection <Student> students = studentService.getStudentsByAgeBetween(minAge,maxAge);
+        Collection<Student> students = studentService.getStudentsByAgeBetween(minAge, maxAge);
         return !students.isEmpty()
                 ? ResponseEntity.ok(students)
                 : ResponseEntity.noContent().build();
@@ -112,5 +112,35 @@ public class StudentController {
     public ResponseEntity<Double> getAverageAgeUsingStreams() {
         Double averageAge = studentService.getAverageAgeUsingStreams();
         return ResponseEntity.ok(averageAge);
+    }
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<Void> printStudentsParallel() {
+        Collection<Student> students = studentService.getAllStudents();
+        if (students.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        Student[] studentArray = students.toArray(new Student[0]);
+        int count = Math.min(studentArray.length, 6);
+
+        studentService.printStudentsParallel(studentArray, count);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<Void> printStudentsSynchronized() {
+        Collection<Student> students = studentService.getAllStudents();
+        if (students.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        Student[] studentArray = students.toArray(new Student[0]);
+        int count = Math.min(studentArray.length, 6);
+
+        studentService.printStudentsSynchronized(studentArray, count);
+
+        return ResponseEntity.ok().build();
     }
 }
